@@ -1,4 +1,4 @@
-"""Command line: ``./pack.py validate`` and ``./pack.py build``."""
+"""Command line: ``./pack.py validate``, ``./pack.py build`` and ``./pack.py version``."""
 
 from __future__ import annotations
 
@@ -9,6 +9,8 @@ from pathlib import Path
 
 from p2dpack.build import BuildError, PackBuilder
 from p2dpack.merge import MergeError
+from p2dpack.release import GitHistory, next_version
+from p2dpack.release.version import highest_bump
 from p2dpack.report import Report
 from p2dpack.validation import PackValidator
 
@@ -66,6 +68,18 @@ def build(args: argparse.Namespace) -> int:
     return 0
 
 
+def version(args: argparse.Namespace) -> int:
+    history = GitHistory(args.repo)
+    latest = history.latest_release()
+    subjects = history.subjects_since(latest)
+    upcoming = next_version(latest, subjects)
+    print(f"latest release: {latest.tag if latest else 'none'}")
+    print(f"commits since: {len(subjects)}, highest gitmoji bump: {highest_bump(subjects).name.lower()}")
+    print(f"next release: {upcoming.tag if upcoming else 'none'}")
+    _github_output(next=upcoming.tag if upcoming else "")
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(prog="pack.py", description="Place2Die resource pack tooling")
     commands = root.add_subparsers(dest="command", required=True)
@@ -81,6 +95,10 @@ def parser() -> argparse.ArgumentParser:
                                help="BetterModel pack folder or zip (default: ./bettermodel or "
                                     "./bettermodel.zip when present)")
     build_command.set_defaults(handler=build)
+
+    version_command = commands.add_parser("version", help="next release tag from the gitmojis since the last tag")
+    version_command.add_argument("--repo", type=Path, default=Path("."))
+    version_command.set_defaults(handler=version)
     return root
 
 
