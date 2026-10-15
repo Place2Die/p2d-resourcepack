@@ -1,0 +1,83 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+
+# Releases on main run one at a time, so two merges never compute the same version.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Test the tooling
+        run: python -m unittest discover -s tests -t . -v
+
+      - name: Validate and build the pack
+        run: python pack.py build
+
+      - name: Check the zip is reproducible
+        run: |
+          python pack.py build --out build/again
+          cmp build/p2d-resourcepack.zip build/again/p2d-resourcepack.zip
+          cat build/p2d-resourcepack.zip.sha1 >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: p2d-resourcepack
+          path: |
+            build/p2d-resourcepack.zip
+            build/p2d-resourcepack.zip.sha1
+          if-no-files-found: error
+
+  # On main: version from the gitmojis since the last tag (place2die semver rule), then a
+  # GitHub release carrying the zip and its SHA-1. Commits with no releasing gitmoji
+  # (:memo:, :construction_worker:...) publish nothing.
+  release:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: p2d-resourcepack
+          path: build
+
+      - name: Compute the version
+        id: version
+        run: python pack.py version
+
+      - name: Publish the release
+        if: steps.version.outputs.next != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.next }}
+        run: |
+          sha1=$(cut -d' ' -f1 build/p2d-resourcepack.zip.sha1)
+          printf 'Resource pack %s\n\nSHA-1: `%s`\n' "$TAG" "$sha1" > notes.md
+          gh release create "$TAG" build/p2d-resourcepack.zip build/p2d-resourcepack.zip.sha1 \
+            --target "$GITHUB_SHA" --title "$TAG" --notes-file notes.md
+          echo "Released $TAG (SHA-1 $sha1)" >> "$GITHUB_STEP_SUMMARY"
