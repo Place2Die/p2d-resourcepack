@@ -1,0 +1,15 @@
+# Build output (the zip and its SHA-1)
+build/
+
+# Python
+__pycache__/
+*.pyc
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
