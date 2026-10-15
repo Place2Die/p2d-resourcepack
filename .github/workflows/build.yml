@@ -35,7 +35,7 @@ jobs:
           cmp build/p2d-resourcepack.zip build/again/p2d-resourcepack.zip
           cat build/p2d-resourcepack.zip.sha1 >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: p2d-resourcepack
           path: |
@@ -61,7 +61,7 @@ jobs:
         with:
           python-version: '3.13'
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: p2d-resourcepack
           path: build
