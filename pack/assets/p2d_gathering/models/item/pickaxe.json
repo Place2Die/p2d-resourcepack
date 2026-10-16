@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "p2d_gathering:item/pickaxe"
+  }
+}
