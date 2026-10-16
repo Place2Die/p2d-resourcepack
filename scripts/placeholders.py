@@ -367,6 +367,26 @@ TEXTURES: dict[str, dict[str, list[str]]] = {
             "sssksssssskkssks",
         ],
     },
+    "p2d_building": {
+        "block/tool_cupboard": [
+            "kkkkkkkkkkkkkkkk",
+            "kBBBBBBBBBBBBBBk",
+            "kBbbbbbkkbbbbbBk",
+            "kBbmmbbkkbbmmbBk",
+            "kBbmmbbkkbbmmbBk",
+            "kBbbbbbkkbbbbbBk",
+            "kBbbbbbkkbbbbbBk",
+            "kBbbbbMkkMbbbbBk",
+            "kBbbbbMkkMbbbbBk",
+            "kBbbbbbkkbbbbbBk",
+            "kBbbbbbkkbbbbbBk",
+            "kBbmmbbkkbbmmbBk",
+            "kBbmmbbkkbbmmbBk",
+            "kBbbbbbkkbbbbbBk",
+            "kBBBBBBBBBBBBBBk",
+            "kkkkkkkkkkkkkkkk",
+        ],
+    },
 }
 
 

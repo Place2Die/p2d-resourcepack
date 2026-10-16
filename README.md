@@ -17,6 +17,7 @@ pack/                         the pack sources, zipped as-is
       models/item/<id>.json   the model
       textures/item/<id>.png  the texture
     p2d_gathering/            items (materials, tools) and harvest node models
+    p2d_building/             the tool cupboard (item and block display)
       textures/block/<id>.png node textures (cube models shown by an item display)
     p2d_zombies/ p2d_loot/ …  (added with their first asset)
 bettermodel/ or bettermodel.zip   optional, BetterModel's generated pack (see below)
@@ -116,6 +117,7 @@ real art (PERSO-83). Replace the PNG and remove its entry from the script.
 | `p2d_gathering:rock_depleted` (node display) | `assets/p2d_gathering/textures/block/rock_depleted.png` |
 | `p2d_gathering:ore` (node display) | `assets/p2d_gathering/textures/block/ore.png` |
 | `p2d_gathering:ore_depleted` (node display) | `assets/p2d_gathering/textures/block/ore_depleted.png` |
+| `p2d_building:tool_cupboard` (item and block display) | `assets/p2d_building/textures/block/tool_cupboard.png` |
 
 ## BetterModel (3D mobs)
 
