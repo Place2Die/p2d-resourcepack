@@ -19,7 +19,8 @@ pack/                         the pack sources, zipped as-is
     p2d_gathering/            items (materials, tools) and harvest node models
     p2d_building/             the tool cupboard (item and block display)
       textures/block/<id>.png node textures (cube models shown by an item display)
-    p2d_zombies/ p2d_loot/ …  (added with their first asset)
+    p2d_loot/                 loot barrel and crate models (item displays over the containers)
+    p2d_zombies/ …            (added with their first asset)
 bettermodel/ or bettermodel.zip   optional, BetterModel's generated pack (see below)
 tools/p2dpack/                build tooling (Python 3.13, standard library only)
 tests/                        unittest suite of the tooling
@@ -84,7 +85,8 @@ Every custom item has its own model and texture (rule decided on 2026-10-15). Fo
 ### World objects shown by an item display
 
 Core custom blocks can be rendered by an item display whose `item_model` is the block's key
-(harvest nodes do: an invisible barrier hitbox under the model). They follow the same three
+(harvest nodes do: an invisible barrier hitbox under the model; p2d-loot's barrels too, and its
+crates show theirs over the chest that holds the loot). They follow the same three
 steps; a block-shaped placeholder uses `"parent": "minecraft:block/cube_all"` with
 `"textures": { "all": "p2d_<plugin>:block/<id>" }` and its texture under `textures/block/`.
 
@@ -117,6 +119,8 @@ real art (PERSO-83). Replace the PNG and remove its entry from the script.
 | `p2d_gathering:rock_depleted` (node display) | `assets/p2d_gathering/textures/block/rock_depleted.png` |
 | `p2d_gathering:ore` (node display) | `assets/p2d_gathering/textures/block/ore.png` |
 | `p2d_gathering:ore_depleted` (node display) | `assets/p2d_gathering/textures/block/ore_depleted.png` |
+| `p2d_loot:barrel` (loot barrel display) | `assets/p2d_loot/textures/block/barrel.png` |
+| `p2d_loot:crate` (loot crate display) | `assets/p2d_loot/textures/block/crate.png` |
 | `p2d_building:tool_cupboard` (item and block display) | `assets/p2d_building/textures/block/tool_cupboard.png` |
 
 ## BetterModel (3D mobs)
